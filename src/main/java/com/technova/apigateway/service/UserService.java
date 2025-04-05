@@ -5,6 +5,9 @@ import com.technova.dto.user.UserLoginRequest;
 import com.technova.dto.user.UserLoginResponse;
 import com.technova.dto.user.UserResponseDTO;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +28,7 @@ public class UserService {
         return (UserResponseDTO) amqpTemplate.convertSendAndReceive("", "user-save-request", user);
     }
 
-    public void sendUserLoginRequest(String email, String password) {
-        UserLoginResponse dto = (UserLoginResponse) amqpTemplate.convertSendAndReceive("", "user-login-request", email);
-        assert dto != null;
-        if (bCryptPasswordEncoder.matches(password, dto.getData().get("password"))) {
-            System.out.println("User logged in successfully");
-        } else {
-            System.out.println("Invalid credentials");
-        }
+    public UserLoginResponse sendUserLoginRequest(String email) {
+        return (UserLoginResponse) amqpTemplate.convertSendAndReceive("", "user-login-request", email);
     }
 }

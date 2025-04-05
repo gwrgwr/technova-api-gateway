@@ -44,4 +44,9 @@ public class RabbitMQConfiguration {
     public Exchange exchangeUserLoginRequest() {
         return new TopicExchange("user-login-request-exchange", true, false);
     }
+
+    @Bean
+    public Queue queueUserFindByEmailRequest() {
+        return new Queue("user-find-by-email-request", true);
+    }
 }
