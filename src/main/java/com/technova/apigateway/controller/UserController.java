@@ -2,7 +2,7 @@ package com.technova.apigateway.controller;
 
 import com.technova.apigateway.domain.user.UserEntity;
 import com.technova.apigateway.service.UserService;
-import com.technova.dto.UserResponseDTO;
+import com.technova.dto.user.UserResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

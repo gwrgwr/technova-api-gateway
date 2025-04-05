@@ -34,3 +34,7 @@ build/
 
 ### Environment ###
 *.env
+
+src/main/resources/public.pem
+src/main/resources/key.pem
+

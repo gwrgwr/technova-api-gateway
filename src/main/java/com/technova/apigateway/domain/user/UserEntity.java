@@ -1,6 +1,13 @@
 package com.technova.apigateway.domain.user;
 
-public class UserEntity {
+import org.springframework.security.core.CredentialsContainer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+public class UserEntity implements UserDetails, CredentialsContainer {
     private String id;
 
     private String name;
@@ -81,6 +88,26 @@ public class UserEntity {
         this.address = address;
     }
 
-    public UserEntity() {
+    public UserEntity() {}
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (getRole().equals("ROLE_USER")) {
+            return List.of(() -> "ROLE_USER");
+        } else if (getRole().equals("ROLE_ADMIN")) {
+            return List.of(() -> "ROLE_ADMIN", () -> "ROLE_USER");
+        } else {
+            return List.of(() -> "ROLE_GUEST");
+        }
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public void eraseCredentials() {
+        this.password = null;
     }
 }
