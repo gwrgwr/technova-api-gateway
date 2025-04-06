@@ -65,9 +65,4 @@ public class SecurityConfig {
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
-
-    @Bean
-    public CustomUserDetailsService customUserDetailsService() {
-        return new CustomUserDetailsService();
-    }
 }

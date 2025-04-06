@@ -1,13 +1,10 @@
 package com.technova.apigateway.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.technova.apigateway.domain.user.UserEntity;
-import com.technova.dto.user.UserLoginRequest;
-import com.technova.dto.user.UserLoginResponse;
+import com.technova.dto.Result;
 import com.technova.dto.user.UserResponseDTO;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +20,25 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public UserResponseDTO sendUserSaveRequest(UserEntity user) {
+    public Result<UserResponseDTO> sendUserSaveRequest(UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return (UserResponseDTO) amqpTemplate.convertSendAndReceive("", "user-save-request", user);
+        Object response =  amqpTemplate.convertSendAndReceive("", "user-save-request", user);
+        if (response instanceof Result<?>) {
+            return (Result<UserResponseDTO>) response;
+        } else {
+            return Result.error(new RuntimeException("Invalid response from user service"));
+        }
     }
 
-    public UserLoginResponse sendUserLoginRequest(String email) {
-        return (UserLoginResponse) amqpTemplate.convertSendAndReceive("", "user-login-request", email);
+    public Result<UserResponseDTO> sendUserLoginRequest(String email) {
+        // TODO : Refactor code
+        Object response =  amqpTemplate.convertSendAndReceive("", "user-login-request", email);
+        ObjectMapper mapper = new ObjectMapper();
+        if (response instanceof Result<?>) {
+            UserResponseDTO responseDTO = mapper.convertValue(((Result<?>) response).getData(), UserResponseDTO.class);
+            return Result.success(responseDTO);
+        } else {
+            return Result.error(new RuntimeException("Invalid response from user service"));
+        }
     }
 }

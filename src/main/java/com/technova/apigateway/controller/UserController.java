@@ -3,6 +3,7 @@ package com.technova.apigateway.controller;
 import com.technova.apigateway.domain.user.UserEntity;
 import com.technova.apigateway.service.AuthService;
 import com.technova.apigateway.service.UserService;
+import com.technova.dto.Result;
 import com.technova.dto.user.UserLoginRequest;
 import com.technova.dto.user.UserResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -24,11 +25,8 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody UserEntity user) {
-        UserResponseDTO userResponseDTO = userService.sendUserSaveRequest(user);
-        if (userResponseDTO.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO.getMessage());
-        };
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(userResponseDTO.getMessage());
+        userService.sendUserSaveRequest(user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
