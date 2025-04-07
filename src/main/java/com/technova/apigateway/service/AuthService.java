@@ -1,10 +1,9 @@
 package com.technova.apigateway.service;
 
-import com.technova.apigateway.domain.user.UserAuth;
-import com.technova.dto.Result;
-import com.technova.dto.user.UserLoginRequest;
-import com.technova.dto.user.UserResponseDTO;
-import com.technova.exceptions.user.UserNotFoundException;
+import com.technova.apigateway.domain.user.User;
+import com.technova.user.UserResponseDTO;
+import com.technova.user.dto.Result;
+import com.technova.user.exceptions.UserNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,14 +22,14 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public String login (UserLoginRequest userLoginRequest) {
+    public String login (com.technova.user.UserLoginRequest userLoginRequest) {
         Result<UserResponseDTO> userResponseDTO = userService.sendUserLoginRequest(userLoginRequest.getUsername());
         if (userResponseDTO.isHasError()) {
             throw new UserNotFoundException("User not found");
         }
-        UserAuth userAuth = new UserAuth(userResponseDTO.getData());
+        User user = new User(userResponseDTO.getData());
         if (bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), userResponseDTO.getData().getPassword())) {
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userAuth.getEmail(), userAuth.getPassword(), userAuth.getAuthorities());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
             return tokenService.generateToken(userResponseDTO.getData().getEmail(), userResponseDTO.getData().getRole());
         }

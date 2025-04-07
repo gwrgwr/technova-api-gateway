@@ -1,5 +1,6 @@
 package com.technova.apigateway.config;
 
+import com.technova.user.constants.RabbitUserConstants;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -26,27 +27,38 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public Queue queueUserSaveRequest() {
-        return new Queue("user-save-request", true);
+    public Exchange userExchange() {
+        return new DirectExchange(RabbitUserConstants.USER_EXCHANGE, true, false);
     }
 
     @Bean
-    public Exchange exchangeUserSaveRequest() {
-        return new TopicExchange("user-save-request-exchange", true, false);
+    public Queue queueUserSaveRequest() {
+        return new Queue(RabbitUserConstants.USER_SAVE_REQUEST_QUEUE, true);
     }
 
     @Bean
     public Queue queueUserLoginRequest() {
-        return new Queue("user-login-request", true);
+        return new Queue(RabbitUserConstants.USER_LOGIN_REQUEST_QUEUE, true);
+    }
+
+
+    @Bean
+    public Queue queueUserFindByIdRequest() {
+        return new Queue(RabbitUserConstants.USER_FIND_BY_ID_REQUEST_QUEUE, true);
     }
 
     @Bean
-    public Exchange exchangeUserLoginRequest() {
-        return new TopicExchange("user-login-request-exchange", true, false);
+    public Binding bindingUserSaveRequest(Queue queueUserSaveRequest, Exchange userExchange) {
+        return BindingBuilder.bind(queueUserSaveRequest).to(userExchange).with(RabbitUserConstants.USER_SAVE_REQUEST_ROUTING_KEY).noargs();
     }
 
     @Bean
-    public Queue queueUserFindByEmailRequest() {
-        return new Queue("user-find-by-email-request", true);
+    public Binding bindingUserLoginRequest(Queue queueUserLoginRequest, Exchange userExchange) {
+        return BindingBuilder.bind(queueUserLoginRequest).to(userExchange).with(RabbitUserConstants.USER_LOGIN_REQUEST_ROUTING_KEY).noargs();
+    }
+
+    @Bean
+    public Binding bindingUserFindByIdRequest(Queue queueUserFindByIdRequest, Exchange userExchange) {
+        return BindingBuilder.bind(queueUserFindByIdRequest).to(userExchange).with(RabbitUserConstants.USER_FIND_BY_ID_REQUEST_ROUTING_KEY).noargs();
     }
 }

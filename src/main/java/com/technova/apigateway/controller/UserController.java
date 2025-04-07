@@ -1,11 +1,11 @@
 package com.technova.apigateway.controller;
 
-import com.technova.apigateway.domain.user.UserEntity;
 import com.technova.apigateway.service.AuthService;
 import com.technova.apigateway.service.UserService;
-import com.technova.dto.Result;
-import com.technova.dto.user.UserLoginRequest;
-import com.technova.dto.user.UserResponseDTO;
+import com.technova.user.UserCreateDTO;
+import com.technova.user.UserLoginRequest;
+import com.technova.user.UserResponseDTO;
+import com.technova.user.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody UserEntity user) {
+    public ResponseEntity<?> save(@RequestBody UserCreateDTO user) {
         userService.sendUserSaveRequest(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -36,6 +36,16 @@ public class UserController {
             return ResponseEntity.ok(token);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String id) {
+        UserResponseDTO userResponseDTO = userService.sendFindUserByIdRequest(id).getData();
+        if (userResponseDTO != null) {
+            return ResponseEntity.ok(userResponseDTO);
+        }
+        throw new UserNotFoundException("User not found");
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")

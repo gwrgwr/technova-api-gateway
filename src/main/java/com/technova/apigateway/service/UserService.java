@@ -1,9 +1,12 @@
 package com.technova.apigateway.service;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.technova.apigateway.domain.user.UserEntity;
-import com.technova.dto.Result;
-import com.technova.dto.user.UserResponseDTO;
+import com.technova.apigateway.mapper.JsonMapper;
+import com.technova.apigateway.rabbit.RabbitClient;
+import com.technova.user.UserCreateDTO;
+import com.technova.user.UserResponseDTO;
+import com.technova.user.dto.Result;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,34 +14,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private final AmqpTemplate amqpTemplate;
+    private final RabbitClient rabbitClient;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(AmqpTemplate amqpTemplate, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.amqpTemplate = amqpTemplate;
+    public UserService(RabbitClient rabbitClient, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.rabbitClient = rabbitClient;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Result<UserResponseDTO> sendUserSaveRequest(UserEntity user) {
+    public Result<?> sendUserSaveRequest(UserCreateDTO user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Object response =  amqpTemplate.convertSendAndReceive("", "user-save-request", user);
-        if (response instanceof Result<?>) {
-            return (Result<UserResponseDTO>) response;
-        } else {
-            return Result.error(new RuntimeException("Invalid response from user service"));
-        }
+        return rabbitClient.sendCreateUser(user);
     }
 
     public Result<UserResponseDTO> sendUserLoginRequest(String email) {
-        // TODO : Refactor code
-        Object response =  amqpTemplate.convertSendAndReceive("", "user-login-request", email);
-        ObjectMapper mapper = new ObjectMapper();
-        if (response instanceof Result<?>) {
-            UserResponseDTO responseDTO = mapper.convertValue(((Result<?>) response).getData(), UserResponseDTO.class);
-            return Result.success(responseDTO);
-        } else {
-            return Result.error(new RuntimeException("Invalid response from user service"));
-        }
+        return rabbitClient.sendLoginRequest(email);
+    }
+
+    public Result<UserResponseDTO> sendFindUserByIdRequest(String id) {
+        return rabbitClient.findUserById(id);
     }
 }

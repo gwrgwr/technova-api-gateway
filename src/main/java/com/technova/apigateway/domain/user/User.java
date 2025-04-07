@@ -1,6 +1,6 @@
 package com.technova.apigateway.domain.user;
 
-import com.technova.dto.user.UserResponseDTO;
+import com.technova.user.UserResponseDTO;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class UserAuth implements UserDetails, CredentialsContainer {
+public class User implements UserDetails, CredentialsContainer {
 
     private String email;
 
@@ -62,13 +62,13 @@ public class UserAuth implements UserDetails, CredentialsContainer {
         this.password = null;
     }
 
-    public UserAuth(String email, String password, String role) {
+    public User(String email, String password, String role) {
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public UserAuth(UserResponseDTO userResponseDTO) {
+    public User(UserResponseDTO userResponseDTO) {
         this.email = userResponseDTO.getEmail();
         this.password = userResponseDTO.getPassword();
         this.role = userResponseDTO.getRole();
