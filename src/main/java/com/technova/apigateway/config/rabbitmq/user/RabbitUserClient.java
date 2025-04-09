@@ -1,7 +1,6 @@
-package com.technova.apigateway.rabbit;
+package com.technova.apigateway.config.rabbitmq.user;
 
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.technova.apigateway.mapper.JsonMapper;
 import com.technova.user.UserCreateDTO;
 import com.technova.user.UserResponseDTO;
@@ -11,10 +10,10 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RabbitClient {
+public class RabbitUserClient {
     private final AmqpTemplate amqpTemplate;
 
-    public RabbitClient(AmqpTemplate amqpTemplate) {
+    public RabbitUserClient(AmqpTemplate amqpTemplate) {
         this.amqpTemplate = amqpTemplate;
     }
 

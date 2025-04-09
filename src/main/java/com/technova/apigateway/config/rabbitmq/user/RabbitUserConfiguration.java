@@ -1,4 +1,4 @@
-package com.technova.apigateway.config.rabbitmq;
+package com.technova.apigateway.config.rabbitmq.user;
 
 import com.technova.user.constants.RabbitUserConstants;
 import org.springframework.amqp.core.*;
