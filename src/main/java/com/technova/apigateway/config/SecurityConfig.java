@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/user/save", "/api/v1/user/login", "/api/v1/oauth2/login-success", "/login/oauth2/code/google").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/vendor/save", "/api/v1/vendor/login", "/api/v1/user/save", "/api/v1/user/login", "/api/v1/oauth2/login-success", "/login/oauth2/code/google").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/user").permitAll()
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)

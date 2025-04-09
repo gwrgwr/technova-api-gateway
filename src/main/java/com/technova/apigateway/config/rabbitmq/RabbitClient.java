@@ -15,14 +15,15 @@ public class RabbitClient {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public Result<?> sendMessageAndReceive(String exchange, String routingKey, Object message, Object responseObject) {
-        Object response = rabbitTemplate.convertSendAndReceive(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_LOGIN_REQUEST_ROUTING_KEY, message);
+    public <T> Result<T> sendMessageAndReceive(String exchange, String routingKey, Object message, Class<T> responseObject) {
+        Object response = rabbitTemplate.convertSendAndReceive(exchange, routingKey, message);
         if (response == null) return null;
         try {
-            JavaType type = JsonMapper.constructGenericType(Result.class, responseObject.getClass());
+            JavaType type = JsonMapper.constructGenericType(Result.class, responseObject);
             return JsonMapper.getObjectMapper().convertValue(response, type);
+
         } catch (Exception e) {
-            return null;
+            return Result.error(new RuntimeException("Error sending response"));
         }
     }
 
