@@ -1,10 +1,10 @@
 package com.technova.apigateway.service;
 
+import com.technova.Result;
 import com.technova.apigateway.domain.user.User;
 import com.technova.apigateway.domain.vendor.VendorAuth;
 import com.technova.user.UserLoginRequest;
 import com.technova.user.UserResponseDTO;
-import com.technova.user.dto.Result;
 import com.technova.user.exceptions.UserNotFoundException;
 import com.technova.vendor.dto.VendorLoginRequest;
 import com.technova.vendor.dto.VendorResponseDTO;

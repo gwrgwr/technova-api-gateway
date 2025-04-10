@@ -42,10 +42,8 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String id) {
         UserResponseDTO userResponseDTO = userService.sendFindUserByIdRequest(id).getData();
-        if (userResponseDTO != null) {
-            return ResponseEntity.ok(userResponseDTO);
-        }
-        throw new UserNotFoundException("User not found");
+        return ResponseEntity.ok(userResponseDTO);
+
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")

@@ -1,9 +1,12 @@
 package com.technova.apigateway.service;
 
+import com.technova.Result;
 import com.technova.apigateway.config.rabbitmq.vendor.RabbitVendorClient;
-import com.technova.user.dto.Result;
+import com.technova.exceptions.BaseException;
 import com.technova.vendor.dto.VendorCreateDTO;
+import com.technova.vendor.dto.VendorFindDTO;
 import com.technova.vendor.dto.VendorResponseDTO;
+import com.technova.vendor.exceptions.VendorNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +23,25 @@ public class VendorService {
     public Result<VendorResponseDTO> sendVendorSaveRequest(VendorCreateDTO vendor) {
         vendor.setPassword(bCryptPasswordEncoder.encode(vendor.getPassword()));
         Result<VendorResponseDTO> result = rabbitVendorClient.sendCreateVendorRequest(vendor);
-        if (result.getData() == null) {
-            return Result.error(new RuntimeException("Error sending vendor"));
+        if (result.isHasError()) {
+            throw result.getError();
         }
         return result;
     }
 
     public Result<VendorResponseDTO> sendVendorLoginRequest(String email) {
-        return rabbitVendorClient.sendVendorLoginRequest(email);
+        Result<VendorResponseDTO> result = rabbitVendorClient.sendVendorLoginRequest(email);
+        if (result.isHasError()) {
+            throw result.getError();
+        }
+        return result;
+    }
+
+    public Result<VendorFindDTO> sendFindVendorByIdRequest(String id) {
+        Result<VendorFindDTO> result = rabbitVendorClient.findVendorById(id);
+        if (result.isHasError()) {
+            throw result.getError();
+        }
+        return result;
     }
 }

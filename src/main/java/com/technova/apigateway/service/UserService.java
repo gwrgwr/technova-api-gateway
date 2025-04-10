@@ -1,9 +1,9 @@
 package com.technova.apigateway.service;
 
+import com.technova.Result;
 import com.technova.apigateway.config.rabbitmq.user.RabbitUserClient;
 import com.technova.user.UserCreateDTO;
 import com.technova.user.UserResponseDTO;
-import com.technova.user.dto.Result;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +21,26 @@ public class UserService {
 
     public Result<?> sendUserSaveRequest(UserCreateDTO user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return rabbitUserClient.sendCreateUser(user);
+        Result<?> result = rabbitUserClient.sendCreateUser(user);
+        if (result.isHasError()) {
+            throw result.getError();
+        }
+        return result;
     }
 
     public Result<UserResponseDTO> sendUserLoginRequest(String email) {
-        return rabbitUserClient.sendLoginRequest(email);
+        Result<UserResponseDTO> result = rabbitUserClient.sendLoginRequest(email);
+        if (result.isHasError()) {
+            throw result.getError();
+        }
+        return result;
     }
 
     public Result<UserResponseDTO> sendFindUserByIdRequest(String id) {
-        return rabbitUserClient.findUserById(id);
+        Result<UserResponseDTO> result = rabbitUserClient.findUserById(id);
+        if (result.isHasError()) {
+            throw result.getError();
+        }
+        return result;
     }
 }

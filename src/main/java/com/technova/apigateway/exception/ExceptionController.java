@@ -2,6 +2,8 @@ package com.technova.apigateway.exception;
 
 import com.technova.user.exceptions.UserAlreadyExistsException;
 import com.technova.user.exceptions.UserNotFoundException;
+import com.technova.vendor.exceptions.VendorAlreadyExistsException;
+import com.technova.vendor.exceptions.VendorNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,5 +20,15 @@ public class ExceptionController {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e, HttpServletRequest request) {
         return ResponseEntity.status(404).body(new RestExceptionDTO(request.getRequestURI(), e.getMessage(), 404, "User not found"));
+    }
+
+    @ExceptionHandler(VendorNotFoundException.class)
+    public ResponseEntity<?> handleVendorNotFoundException(VendorNotFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(404).body(new RestExceptionDTO(request.getRequestURI(), e.getMessage(), 404, "Vendor not found"));
+    }
+
+    @ExceptionHandler(VendorAlreadyExistsException.class)
+    public ResponseEntity<?> handleVendorAlreadyExistsException(VendorAlreadyExistsException e, HttpServletRequest request) {
+        return ResponseEntity.badRequest().body(new RestExceptionDTO(request.getRequestURI(), e.getMessage(), 400, "Vendor already exists"));
     }
 }

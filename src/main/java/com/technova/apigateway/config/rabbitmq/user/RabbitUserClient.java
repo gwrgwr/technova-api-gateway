@@ -1,12 +1,12 @@
 package com.technova.apigateway.config.rabbitmq.user;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.technova.Result;
 import com.technova.apigateway.config.rabbitmq.RabbitClient;
 import com.technova.apigateway.mapper.JsonMapper;
 import com.technova.user.UserCreateDTO;
 import com.technova.user.UserResponseDTO;
 import com.technova.user.constants.RabbitUserConstants;
-import com.technova.user.dto.Result;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Component;
 
