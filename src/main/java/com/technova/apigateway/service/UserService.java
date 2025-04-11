@@ -2,8 +2,8 @@ package com.technova.apigateway.service;
 
 import com.technova.Result;
 import com.technova.apigateway.config.rabbitmq.user.RabbitUserClient;
-import com.technova.user.UserCreateDTO;
-import com.technova.user.UserResponseDTO;
+import com.technova.user.dto.UserCreateDTO;
+import com.technova.user.dto.UserResponseDTO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
 package com.technova.apigateway.service;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -15,7 +16,7 @@ public class TokenService {
     @Autowired
     private JwtEncoder jwtEncoder;
 
-    public String generateToken(String email, String role) {
+    public String generateToken(String id, String email, String role) {
         Instant now = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -23,6 +24,7 @@ public class TokenService {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(3600))
                 .subject(email)
+                .claim("id", id)
                 .claim("scope", role)
                 .build();
 

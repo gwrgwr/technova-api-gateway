@@ -11,11 +11,32 @@ import java.util.List;
 
 public class VendorAuth implements UserDetails, CredentialsContainer {
 
+    private String id;
+
+    private String companyName;
+
     private String credentials;
 
     private String password;
 
     private String role;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getCredentials() {
         return credentials;
@@ -47,6 +68,8 @@ public class VendorAuth implements UserDetails, CredentialsContainer {
     }
 
     public VendorAuth(VendorResponseDTO vendorResponseDTO) {
+        this.id = vendorResponseDTO.getId();
+        this.companyName = vendorResponseDTO.getCompanyName();
         this.credentials = vendorResponseDTO.getEmail();
         this.password = vendorResponseDTO.getPassword();
         this.role = vendorResponseDTO.getRole();

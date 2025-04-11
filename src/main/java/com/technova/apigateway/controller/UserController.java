@@ -2,10 +2,9 @@ package com.technova.apigateway.controller;
 
 import com.technova.apigateway.service.AuthService;
 import com.technova.apigateway.service.UserService;
-import com.technova.user.UserCreateDTO;
-import com.technova.user.UserLoginRequest;
-import com.technova.user.UserResponseDTO;
-import com.technova.user.exceptions.UserNotFoundException;
+import com.technova.user.dto.UserCreateDTO;
+import com.technova.user.dto.UserLoginRequest;
+import com.technova.user.dto.UserResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
