@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9.6-openjdk-17'
+            args '-v $HOME/.m2:/root/.m2'
+        }
+    }
     environment {
         DOCKER_IMAGE_NAME = 'gwrgwr/murilo.ramos'
         DOCKER_CREDENTIALS = 'docker-hub-credentials'
@@ -15,11 +20,7 @@ pipeline {
             steps {
                 git url: 'https://github.com/gwrgwr/technova-common.git', branch: 'master', changelog: false, poll: false
                 dir('technova-common') {
-                    sh '''
-                                        apt-get update
-                                        apt-get install -y maven
-                                        mvn clean install -DskipTests
-                                        '''
+                    sh 'mvn clean install -DskipTests'
                 }
             }
         }
