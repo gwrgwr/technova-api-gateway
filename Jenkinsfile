@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Pré-build: Instalar technova-common') {
             steps {
-                git url: 'https://seurepo.com/technova-common.git', branch: 'main', changelog: false, poll: false
+                git url: 'https://github.com/gwrgwr/technova-common.git', branch: 'master', changelog: false, poll: false
                 dir('technova-common') {
                     sh 'mvn clean install -DskipTests'
                 }
