@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', DOCKER_CREDENTIALS) {
-                        docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
+                        docker.build("${DOCKER_IMAGE_NAME}:api-gateway-{env.BUILD_ID}", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
                     }
                 }
             }
@@ -48,7 +48,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', DOCKER_CREDENTIALS) {
-                        sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway:-{env.BUILD_ID}"
+                        sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway-{env.BUILD_ID}"
                     }
                 }
             }
