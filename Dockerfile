@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Estágio 2: Imagem final leve
-FROM openjdk:17-jre-slim
+FROM openjdk:17
 WORKDIR /app
 COPY --from=build /app/target/technova-api-gateway.jar ./app.jar
 EXPOSE 8080

@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', DOCKER_CREDENTIALS) {
-                        docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}", "--build-arg BUILD_ENV=jenkins .")
+                        docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}", '-f Dockerfile .')
                     }
                 }
             }
