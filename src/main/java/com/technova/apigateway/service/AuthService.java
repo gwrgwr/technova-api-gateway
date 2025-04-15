@@ -74,8 +74,6 @@ public class AuthService {
         throw new RuntimeException("Usuário não autenticado.");
     }
 
-//    teste
-
     public String getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof User user) {
