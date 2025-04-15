@@ -10,11 +10,19 @@ pipeline {
 				checkout scm
         	}
         }
+        stage('Pré-build: Instalar technova-common') {
+            steps {
+                git url: 'https://seurepo.com/technova-common.git', branch: 'main', changelog: false, poll: false
+                dir('technova-common') {
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        }
         stage('Build Docker Image') {
 			steps {
 				script {
 				docker.withRegistry('', DOCKER_CREDENTIALS) {
-				    def customImage = docker.build("$DOCKER_IMAGE_NAME:${env.BUILD_ID}", "-f Dockerfile .")}
+				    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_ID}", "--build-arg BUILD_ENV=jenkins .")
                 }
             }
         }
