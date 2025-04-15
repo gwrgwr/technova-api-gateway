@@ -15,11 +15,8 @@ pipeline {
             steps {
                 git url: 'https://github.com/gwrgwr/technova-common.git', branch: 'master', changelog: false, poll: false
                 dir('technova-common') {
-                    sh '''
-                                        sudo apt-get update
-                                        sudo apt-get install -y maven
-                                        mvn clean install -DskipTests
-                                        '''
+                    // Rodando o Maven diretamente (sem o sudo ou apt-get)
+                    sh 'mvn clean install -DskipTests'
                 }
             }
         }
