@@ -13,7 +13,8 @@ pipeline {
         stage('Build Docker Image') {
 			steps {
 				script {
-					def customImage = docker.build("$DOCKER_IMAGE_NAME:${env.BUILD_ID}", "-f Dockerfile .")
+				docker.withRegistry('', DOCKER_CREDENTIALS) {
+				    def customImage = docker.build("$DOCKER_IMAGE_NAME:${env.BUILD_ID}", "-f Dockerfile .")}
                 }
             }
         }
