@@ -15,7 +15,11 @@ pipeline {
             steps {
                 git url: 'https://github.com/gwrgwr/technova-common.git', branch: 'master', changelog: false, poll: false
                 dir('technova-common') {
-                    sh 'mvn clean install -DskipTests'
+                    sh '''
+                                        apt-get update
+                                        apt-get install -y maven
+                                        mvn clean install -DskipTests
+                                        '''
                 }
             }
         }
