@@ -10,6 +10,26 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Setup Maven Authentication') {
+            steps {
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        mkdir -p ~/.m2
+                        cat > ~/.m2/settings.xml <<EOF
+                        <settings>
+                            <servers>
+                                <server>
+                                    <id>github</id>
+                                    <username>gwrgwr</username>
+                                    <password>${GITHUB_TOKEN}</password>
+                                </server>
+                            </servers>
+                        </settings>
+                        EOF
+                    '''
+                }
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 script {
@@ -28,5 +48,11 @@ pipeline {
                 }
             }
         }
+
     }
+    post {
+        always {
+            sh 'rm -f ~/.m2/settings.xml'
+    }
+}
 }
