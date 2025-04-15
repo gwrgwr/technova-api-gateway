@@ -48,7 +48,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', DOCKER_CREDENTIALS) {
-                        sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway:${env.BUILD_ID}"
+                        sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway:-{env.BUILD_ID}"
                     }
                 }
             }
