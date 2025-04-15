@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'maven:3.9.6-openjdk-17'
-            args '-v $HOME/.m2:/root/.m2'
+            image 'maven:3.9.6-jdk-17'  // Usando a imagem correta com OpenJDK 17
+            args '-v $HOME/.m2:/root/.m2'  // Montando o repositório local do Maven
         }
     }
     environment {
