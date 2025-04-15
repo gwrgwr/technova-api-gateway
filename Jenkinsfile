@@ -10,17 +10,6 @@ pipeline {
                 checkout scm
             }
         }
-
-        stage('Pré-build: Instalar technova-common') {
-            steps {
-                git url: 'https://github.com/gwrgwr/technova-common.git', branch: 'master', changelog: false, poll: false
-                dir('technova-common') {
-                    // Rodando o Maven diretamente (sem o sudo ou apt-get)
-                    sh 'mvn clean install -DskipTests'
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -30,7 +19,6 @@ pipeline {
                 }
             }
         }
-
         stage('Push Docker Image') {
             steps {
                 script {

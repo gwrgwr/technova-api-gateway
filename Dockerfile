@@ -1,21 +1,18 @@
-# Etapa 1: build com Maven
-FROM maven:3.9.6-openjdk-17 AS build
-
+# Estágio 1: Build com Maven
+FROM maven:3.8.6-openjdk-11 AS build
 WORKDIR /app
 
-# Copia arquivos do projeto
+# Copie apenas o POM primeiro (para aproveitar o cache de dependências)
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copie o restante do código e construa o projeto
 COPY src ./src
+RUN mvn package -DskipTests
 
-# Compila a aplicação
-RUN mvn clean install -DskipTests
-
-# Etapa 2: imagem final com apenas o JAR
-FROM openjdk:17-slim
-
+# Estágio 2: Imagem final leve
+FROM openjdk:17-jre-slim
 WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
-
+COPY --from=build /app/target/technova-api-gateway.jar ./app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
