@@ -11,9 +11,9 @@ spec:
   imagePullSecrets:
     - name: dockerhub-credentials
   volumes:
-    - name: public-key
+    - name: jwt-public-key-volume
       configMap:
-        name: public-key-config
-    - name: private-key
+        name: jwt-public-key
+    - name: jwt-private-key-volume
       secret:
-        secretName: private-key-secret
+        secretName: jwt-private-key
