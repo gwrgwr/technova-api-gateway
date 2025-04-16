@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent kubernetes {
+        yamlFile 'k8s/deployment.yaml'
+    }
 
     environment {
         DOCKER_IMAGE_NAME = 'gwrgwr/murilo.ramos'
