@@ -53,6 +53,20 @@ pipeline {
                 }
             }
         }
+
+        stage ('Deploy to Kubernetes') {
+            steps {
+                script {
+                    def deploymentName = "api-gateway-${env.BUILD_ID}"
+                    def imageName = "${DOCKER_IMAGE_NAME}:api-gateway-${env.BUILD_ID}"
+
+                    sh """
+                        kubectl set image deployment/${deploymentName} ${deploymentName}=${imageName}
+                        kubectl rollout status deployment/${deploymentName}
+                    """
+                }
+            }
+        }
     }
 
     post {
