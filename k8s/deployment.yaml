@@ -7,6 +7,13 @@ spec:
     - name: api-gateway
       image: gwrgwr/murilo.ramos:api-gateway-22
       ports:
-          - containerPort: 8080
+        - containerPort: 8080
   imagePullSecrets:
     - name: dockerhub-credentials
+  volumes:
+    - name: public-key
+      configMap:
+        name: public-key-config
+    - name: private-key
+      secret:
+        secretName: private-key-secret
