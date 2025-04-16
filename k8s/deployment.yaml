@@ -8,3 +8,5 @@ spec:
       image: gwrgwr/murilo.ramos:api-gateway-22
       ports:
           - containerPort: 8080
+  imagePullSecrets:
+    - name: dockerhub-credentials
