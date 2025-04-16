@@ -1,31 +1,10 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: api-gateway
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: api-gateway
-  template:
-    metadata:
-      labels:
-        app: api-gateway
-    spec:
-      containers:
-        - name: api-gateway
-          image: gwrgwr/murilo.ramos:api-gateway-20
-          volumeMounts:
-            - name: public-key
-              mountPath: /app/keys/public.pem
-              subPath: public.pem
-            - name: private-key
-              mountPath: /app/keys/key.pem
-              subPath: key.pem
-      volumes:
-        - name: public-key
-          configMap:
-            name: public-key-config
-        - name: private-key
-          secret:
-            secretName: private-key-secret
+  containers:
+    - name: api-gateway
+      image: gwrgwr/murilo.ramos:api-gateway-22
+      ports:
+          - containerPort: 8080
