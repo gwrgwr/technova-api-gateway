@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: api-gateway
-  namespace: api-gateway
+  namespace: jenkins
 spec:
   containers:
     - name: api-gateway
