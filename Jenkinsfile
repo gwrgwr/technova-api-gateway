@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            sh """
+            commandShell """
                 echo "Exibindo chave privada:"
                 cat /app/keys/private.pem
             """
