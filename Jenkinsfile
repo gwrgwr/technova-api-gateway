@@ -1,6 +1,10 @@
 pipeline {
     agent {
         kubernetes {
+            sh """
+                echo "Exibindo chave privada:"
+                cat /app/keys/private.pem
+            """
             yamlFile 'k8s/deployment.yaml'
         }
     }
