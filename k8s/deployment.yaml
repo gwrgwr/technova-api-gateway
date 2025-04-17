@@ -8,6 +8,13 @@ spec:
       image: gwrgwr/murilo.ramos:api-gateway-22
       ports:
         - containerPort: 8080
+      volumeMounts:
+        - name: jwt-public-key-volume
+          mountPath: /app/keys/public.pem
+          subPath: public.pem
+        - name: jwt-private-key-volume
+          mountPath: /app/keys/key.pem
+          subPath: private.pem
   imagePullSecrets:
     - name: dockerhub-credentials
   volumes:
