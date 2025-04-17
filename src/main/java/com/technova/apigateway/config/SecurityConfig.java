@@ -21,6 +21,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.io.File;
+import java.net.URI;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
@@ -28,11 +30,21 @@ import java.security.interfaces.RSAPublicKey;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${spring.jwt.keys.public}")
-    private RSAPublicKey publicKey;
-
     @Value("${spring.jwt.keys.secret}")
-    private RSAPrivateKey privateKey;
+    private String privateKeyPath;
+
+    @Value("${spring.jwt.keys.public}")
+    private String publicKeyPath;
+
+    @Bean
+    public RSAPrivateKey privateKey() throws Exception {
+        return KeyUtil.readPrivateKey(new File(new URI(privateKeyPath)).getPath());
+    }
+
+    @Bean
+    public RSAPublicKey publicKey() throws Exception {
+        return KeyUtil.readPublicKey(new File(new URI(publicKeyPath)).getPath());
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,13 +67,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() {
+    public JwtDecoder jwtDecoder(RSAPublicKey publicKey) {
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
     @Bean
-    public JwtEncoder jwtEncode() {
-        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
+    public JwtEncoder jwtEncoder(RSAPrivateKey privateKey, RSAPublicKey publicKey) {
+        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
