@@ -38,12 +38,13 @@ public class SecurityConfig {
 
     @Bean
     public RSAPrivateKey privateKey() throws Exception {
-        return KeyUtil.readPrivateKey(new File(new URI(privateKeyPath)).getPath());
+        System.out.println("Caminho resolvido para privateKeyPath: " + new File(new URI(privateKeyPath)).getPath());
+        return KeyUtil.readPrivateKey(privateKeyPath.replace("file:", ""));
     }
 
     @Bean
     public RSAPublicKey publicKey() throws Exception {
-        return KeyUtil.readPublicKey(new File(new URI(publicKeyPath)).getPath());
+        return KeyUtil.readPublicKey(publicKeyPath.replace("file:", ""));
     }
 
     @Bean
