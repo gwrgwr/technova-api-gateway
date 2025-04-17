@@ -59,6 +59,10 @@ pipeline {
 					yamlFile 'k8s/deployment.yaml'
 				}
         	}
+			steps {
+				// Aqui você pode usar kubectl ou rodar testes com a nova imagem
+                sh "echo Testando imagem no cluster Kubernetes..."
+            }
     	}
 
         //stage ('Deploy to Kubernetes') {
