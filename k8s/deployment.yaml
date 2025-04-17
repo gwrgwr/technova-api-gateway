@@ -15,13 +15,19 @@ spec:
           subPath: public.pem
         - name: jwt-private-key-volume
           mountPath: /app/keys/key.pem
-          subPath: private.pem
+          subPath: key.pem
   imagePullSecrets:
     - name: dockerhub-credentials
   volumes:
     - name: jwt-public-key-volume
       configMap:
         name: jwt-public-key
+        items:
+          - key: public.pem
+            path: public.pem
     - name: jwt-private-key-volume
       secret:
         secretName: jwt-private-key
+        items:
+          - key: key.pem
+            path: key.pem
