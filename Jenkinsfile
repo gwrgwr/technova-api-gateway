@@ -37,7 +37,7 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry('', DOCKER_CREDENTIALS) {
-						docker.build("${DOCKER_IMAGE_NAME}:api-gateway-${env.BUILD_ID}", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
+						docker.build("${DOCKER_IMAGE_NAME}:api-gateway-latest", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
                     }
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry('', DOCKER_CREDENTIALS) {
-						sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway-${env.BUILD_ID}"
+						sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway-latest"
                     }
                 }
             }
@@ -68,8 +68,8 @@ pipeline {
         //stage ('Deploy to Kubernetes') {
         //    steps {
         //        script {
-        //            def deploymentName = "api-gateway-${env.BUILD_ID}"
-        //            def imageName = "${DOCKER_IMAGE_NAME}:api-gateway-${env.BUILD_ID}"
+        //            def deploymentName = "api-gateway-latest"
+        //            def imageName = "${DOCKER_IMAGE_NAME}:api-gateway-latest"
         //
         //            sh """
         //                kubectl set image deployment/${deploymentName} ${deploymentName}=${imageName}
