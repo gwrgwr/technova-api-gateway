@@ -17,18 +17,18 @@ pipeline {
 			steps {
 				script {
 					writeFile file: 'settings.xml', text: """
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <servers>
-    <server>
-      <id>github</id>
-      <username>gwrgwr</username>
-      <password>${GITHUB_TOKEN}</password>
-    </server>
-  </servers>
-</settings>
-                    """
+                            <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                                <servers>
+                                    <server>
+                                        <id>github</id>
+                                        <username>gwrgwr</username>
+                                        <password>${GITHUB_TOKEN}</password>
+                                    </server>
+                                </servers>
+                            </settings>
+                            """
                 }
             }
         }
@@ -53,31 +53,16 @@ pipeline {
             }
         }
 
-        stage("Teste") {
+        stage("Build Container with Kubernetes") {
 			agent {
 				kubernetes {
 					yamlFile 'k8s/deployment.yaml'
 				}
         	}
 			steps {
-				// Aqui você pode usar kubectl ou rodar testes com a nova imagem
                 sh "echo Testando imagem no cluster Kubernetes..."
             }
     	}
-
-        //stage ('Deploy to Kubernetes') {
-        //    steps {
-        //        script {
-        //            def deploymentName = "api-gateway-latest"
-        //            def imageName = "${DOCKER_IMAGE_NAME}:api-gateway-latest"
-        //
-        //            sh """
-        //                kubectl set image deployment/${deploymentName} ${deploymentName}=${imageName}
-        //                kubectl rollout status deployment/${deploymentName}
-        //            """
-        //        }
-        //    }
-        //}
     }
 
     post {
