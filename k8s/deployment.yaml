@@ -16,6 +16,12 @@ spec:
         - name: jwt-private-key-volume
           mountPath: /app/keys/key.pem
           subPath: key.pem
+      env:
+        - name: MONGODB_URI_API_GATEWAY
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: MONGODB_URI_API_GATEWAY
   imagePullSecrets:
     - name: dockerhub-credentials
   volumes:
