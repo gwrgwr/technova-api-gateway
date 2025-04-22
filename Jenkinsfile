@@ -1,7 +1,7 @@
 pipeline {
 	agent any
     environment {
-		DOCKER_IMAGE_NAME = 'gwrgwr/murilo.ramos'
+		DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:latest'
         DOCKER_CREDENTIALS = 'docker-hub-credentials'
         GITHUB_TOKEN = credentials('github-token')
     }
@@ -37,7 +37,7 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry('', DOCKER_CREDENTIALS) {
-						docker.build("${DOCKER_IMAGE_NAME}:api-gateway-latest", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
+						docker.build("${DOCKER_IMAGE_NAME}", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
                     }
                 }
             }
@@ -47,21 +47,18 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry('', DOCKER_CREDENTIALS) {
-						sh "docker push ${DOCKER_IMAGE_NAME}:api-gateway-latest"
+						sh "docker push ${DOCKER_IMAGE_NAME}"
+
                     }
                 }
             }
         }
 
         stage("Build Container with Kubernetes") {
-			agent {
-				kubernetes {
-					yamlFile 'k8s/deployment.yaml'
-				}
-        	}
 			steps {
-                sh "echo Testando imagem no cluster Kubernetes..."
-            }
+			sh """
+                      sed "s|IMAGE_PLACEHOLDER|${DOCKER_IMAGE_NAME}|" k8s/deployment.yaml | kubectl apply -f -
+                    """
     	}
     }
 

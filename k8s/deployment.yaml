@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: api-gateway
-      image: gwrgwr/murilo.ramos:api-gateway-latest
+      image: IMAGE_PLACEHOLDER
       ports:
         - containerPort: 8080
       volumeMounts:
