@@ -1,27 +1,7 @@
 pipeline {
 	agent {
-	    kubernetes {
-			label 'kaniko-agent'
-			yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - name: kaniko-secret
-      mountPath: /kaniko/.docker/
-  volumes:
-  - name: kaniko-secret
-    secret:
-      secretName: regcred
-"""
-		}
-	}
+     	label 'kaniko-agent'
+     }
 
 	environment {
 		DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:latest'
