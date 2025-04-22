@@ -54,19 +54,16 @@ pipeline {
             }
         }
 
-    }
-
-    node(POD_LABEL) {
-                stage("Build Container with Kubernetes") {
-            		    container('jnlp') {
-            		        steps {
-                                withKubeConfig([credentialsId: 'sa-k8s-token', serverUrl: 'https://192.168.49.2:8443']) {
-                                    sh 'kubectl apply -f k8s/deployment.yaml'
-                                }
-                            }
-            		    }
+        stage("Build Container with Kubernetes") {
+            container('jnlp') {
+                steps {
+                    withKubeConfig([credentialsId: 'sa-k8s-token', serverUrl: 'https://192.168.49.2:8443']) {
+                        sh 'kubectl apply -f k8s/deployment.yaml'
+                    }
                 }
             }
+        }
+    }
 
     post {
 		always {
