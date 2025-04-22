@@ -1,5 +1,8 @@
 pipeline {
-	agent any
+	agent {
+	    label 'kubernetes-agent'
+	}
+
     environment {
 		DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:latest'
         DOCKER_CREDENTIALS = 'docker-hub-credentials'
@@ -54,15 +57,17 @@ pipeline {
             }
         }
 
-        stage("Build Container with Kubernetes") {
-            container('jnlp') {
-                steps {
-                    withKubeConfig([credentialsId: 'sa-k8s-token', serverUrl: 'https://192.168.49.2:8443']) {
-                        sh 'kubectl apply -f k8s/deployment.yaml'
+        stage("Deploy to Kubernetes") {
+                    steps {
+                        script {
+                            sh "sed -i 's|IMAGE_PLACEHOLDER|${DOCKER_IMAGE_NAME}|' k8s/deployment.yaml"
+
+                            withKubeConfig([credentialsId: 'sa-k8s-token', serverUrl: 'https://192.168.49.2:8443']) {
+                                sh 'kubectl apply -f k8s/deployment.yaml'
+                            }
+                        }
                     }
                 }
-            }
-        }
     }
 
     post {
