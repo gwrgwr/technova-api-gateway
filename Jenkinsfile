@@ -57,8 +57,8 @@ pipeline {
         stage("Build Container with Kubernetes") {
 			steps {
 			    withKubeConfig([credentialsId: 'sa-k8s-token']) {
-                      sh 'kubectl apply -f k8s/deployment.yaml'
-                    }
+                    sh 'kubectl apply -f k8s/deployment.yaml'
+                }
             }
     	}
     }
