@@ -37,7 +37,7 @@ pipeline {
                 ) {
                   container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
-                      /kaniko/executor --context `pwd` --dockerfile=./Dockerfile --destination darinpope/hello-kaniko:latest
+                      /kaniko/executor --context `pwd` --dockerfile=./Dockerfile --destination gwrgwr/technova-api-gateway:latest
                     '''
                   }
                 }
