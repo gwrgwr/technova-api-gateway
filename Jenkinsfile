@@ -56,7 +56,7 @@ pipeline {
 
         stage("Build Container with Kubernetes") {
 			steps {
-			    withKubeConfig([credentialsId: 'sa-k8s-token', serverUrl: 'https://192.168.49.2:8443/']) {
+			    withKubeConfig([credentialsId: 'sa-k8s-token', serverUrl: 'https://192.168.49.2:8443']) {
                     sh 'kubectl apply -f k8s/deployment.yaml'
                 }
             }
