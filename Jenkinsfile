@@ -56,9 +56,10 @@ pipeline {
 
         stage("Build Container with Kubernetes") {
 			steps {
-			sh """
+			    sh """
                       sed "s|IMAGE_PLACEHOLDER|${DOCKER_IMAGE_NAME}|" k8s/deployment.yaml | kubectl apply -f -
                     """
+            }
     	}
     }
 
