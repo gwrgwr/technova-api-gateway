@@ -56,9 +56,9 @@ pipeline {
 
         stage("Build Container with Kubernetes") {
 			steps {
-			    sh """
-                      sed "s|IMAGE_PLACEHOLDER|${DOCKER_IMAGE_NAME}|" k8s/deployment.yaml | kubectl apply -f -
-                    """
+			    withKubeConfig([credentialsId: 'sa-k8s-token']) {
+                      sh 'kubectl apply -f k8s/deployment.yaml'
+                    }
             }
     	}
     }
