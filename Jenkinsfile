@@ -2,7 +2,20 @@ def DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:latest'
 def GITHUB_TOKEN = credentials('github-auth')
 def POD_LABEL = 'kaniko'
 
+podTemplate(inheritFrom: 'default')
 node(POD_LABEL) {
+
+    stage('Test Kubernetes') {
+        withKubeConfig([namespace: 'jenkins']) {
+            sh '''#!/bin/sh
+                            kubectl version --client
+                            kubectl get pods
+                        '''
+        }
+    }
+
+
+
     stage('Checkout') {
         checkout scm
     }
