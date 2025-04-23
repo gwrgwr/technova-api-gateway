@@ -24,8 +24,8 @@ def POD_LABEL = 'kaniko'
                 withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
                             sh '''#!/bin/sh
                                                     kubectl version --client
-                                                    kubectl -n jenkins set image deployment/technova-api-gateway technova-api-gateway=''' + DOCKER_IMAGE_NAME + '''
-                                                    kubectl -n jenkins rollout status deployment/technova-api-gateway
+                                                    kubectl -n technova set image deployment/technova-api-gateway technova-api-gateway=''' + DOCKER_IMAGE_NAME + '''
+                                                    kubectl -n technova rollout status deployment/technova-api-gateway
                                                 '''
                         }
                 }
