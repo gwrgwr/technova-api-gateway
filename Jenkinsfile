@@ -19,14 +19,20 @@ node(POD_LABEL) {
         }
     }
 
+    stage('Install Kubectl') {
+        withKubeConfig([credentialsId: 'kubeconfig']) {
+            sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'
+            sh 'chmod u+x ./kubectl'
+        }
+      }
+
     stage('Deploy to Kubernetes') {
-            container('kubectl') {
-                withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh '''
+        withKubeConfig([credentialsId: 'kubeconfig']) {
+            sh '''#!/bin/sh
+                                    kubectl version --client
                                     kubectl set image deployment/technova-api-gateway technova-api-gateway=''' + DOCKER_IMAGE_NAME + '''
                                     kubectl rollout status deployment/technova-api-gateway
                                 '''
-                            }
-                }
         }
+    }
 }
