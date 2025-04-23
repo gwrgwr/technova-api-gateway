@@ -4,11 +4,13 @@ def POD_LABEL = 'kaniko'
     node(POD_LABEL) {
 
         stage('Test Kubernetes') {
-            withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
-                sh '''
-                    kubectl version --client
-                    kubectl get pods
-                 '''
+            container ('kubectl') {
+                withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
+                                sh '''
+                                    kubectl version --client
+                                    kubectl get pods
+                                 '''
+                            }
             }
         }
 
