@@ -7,33 +7,15 @@ node(POD_LABEL) {
         checkout scm
     }
 
-    stage('Prepare settings.xml') {
-        writeFile file: 'settings.xml', text: """
-<settings>
-  <servers>
-    <server>
-      <id>github</id>
-      <username>gwrgwr</username>
-      <password>${GITHUB_TOKEN}</password>
-    </server>
-  </servers>
-</settings>
-"""
-    }
-
     stage('Build with Kaniko') {
         container('kaniko') {
-            sh '''#!/busybox/sh
+            sh """#!/busybox/sh
                 /kaniko/executor \
                   --context `pwd` \
-                  --dockerfile=./Dockerfile \
-                  --destination gwrgwr/technova-api-gateway:latest \
+                  --dockerfile=Dockerfile \
+                  --destination ${DOCKER_IMAGE_NAME} \
                   --build-arg GITHUB_TOKEN=${GITHUB_TOKEN}
-            '''
+            """
         }
-    }
-
-    stage('Cleanup') {
-        sh 'rm -f settings.xml'
     }
 }
