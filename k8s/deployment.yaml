@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-gateway
+  name: technova-api-gateway
   namespace: jenkins
   labels:
-    app: api-gateway
+    app: technova-api-gateway
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: api-gateway
+      app: technova-api-gateway
   template:
     metadata:
       labels:
-        app: api-gateway
+        app: technova-api-gateway
     spec:
       containers:
-        - name: api-gateway
+        - name: technova-api-gateway
           image: gwrgwr/technova-api-gateway:latest
           ports:
             - containerPort: 8080
@@ -50,11 +50,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-gateway-service
+  name: technova-api-gateway-service
   namespace: jenkins
 spec:
   selector:
-    app: api-gateway
+    app: technova-api-gateway
   ports:
     - protocol: TCP
       port: 80
