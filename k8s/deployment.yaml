@@ -1,42 +1,51 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: api-gateway
   namespace: jenkins
   labels:
     app: api-gateway
 spec:
-  containers:
-    - name: api-gateway
-      image: gwrgwr/technova-api-gateway:latest
-      ports:
-        - containerPort: 8080
-      volumeMounts:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: gwrgwr/technova-api-gateway:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: jwt-public-key-volume
+              mountPath: /app/keys/public.pem
+              subPath: public.pem
+            - name: jwt-private-key-volume
+              mountPath: /app/keys/key.pem
+              subPath: key.pem
+          env:
+            - name: MONGODB_URI_API_GATEWAY
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-api-gateway
+                  key: MONGODB_URI_API_GATEWAY
+      volumes:
         - name: jwt-public-key-volume
-          mountPath: /app/keys/public.pem
-          subPath: public.pem
+          configMap:
+            name: jwt-public-key
+            items:
+              - key: public.pem
+                path: public.pem
         - name: jwt-private-key-volume
-          mountPath: /app/keys/key.pem
-          subPath: key.pem
-      env:
-        - name: MONGODB_URI_API_GATEWAY
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-api-gateway
-              key: MONGODB_URI_API_GATEWAY
-  volumes:
-    - name: jwt-public-key-volume
-      configMap:
-        name: jwt-public-key
-        items:
-          - key: public.pem
-            path: public.pem
-    - name: jwt-private-key-volume
-      secret:
-        secretName: jwt-private-key
-        items:
-          - key: key.pem
-            path: key.pem
+          secret:
+            secretName: jwt-private-key
+            items:
+              - key: key.pem
+                path: key.pem
 ---
 apiVersion: v1
 kind: Service
