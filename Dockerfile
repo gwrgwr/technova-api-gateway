@@ -19,5 +19,7 @@ RUN rm -f /root/.m2/settings.xml
 FROM openjdk:17
 WORKDIR /app
 COPY --from=build /app/target/*.jar ./app.jar
-EXPOSE 8080
+
+ENV SPRING_PROFILES_ACTIVE=prod
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
