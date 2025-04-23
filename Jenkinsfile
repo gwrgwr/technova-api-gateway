@@ -7,11 +7,7 @@ podTemplate(
             name: 'kaniko',
             image: 'gcr.io/kaniko-project/executor:latest',
             command: '/busybox/sh',
-            args: '-c "while true; do sleep 30; done"',
-            volumeMounts: [
-                mountPath: '/kaniko/.docker',
-                name: 'docker-config'
-            ]
+            args: '-c "while true; do sleep 30; done"'
         )
     ],
     volumes: [
