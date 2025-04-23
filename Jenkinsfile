@@ -3,17 +3,6 @@ def GITHUB_TOKEN = credentials('github-auth')
 def POD_LABEL = 'kaniko'
     node(POD_LABEL) {
 
-        stage('Test Kubernetes') {
-            container ('kubectl') {
-                withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
-                                sh '''
-                                    kubectl version --client
-                                    kubectl get pods
-                                 '''
-                            }
-            }
-        }
-
         stage('Checkout') {
             checkout scm
         }
@@ -32,7 +21,7 @@ def POD_LABEL = 'kaniko'
 
         stage('Deploy to Kubernetes') {
             container('kubectl') {
-                withKubeConfig([credentialsId: 'kubeconfig']) {
+                withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
                             sh '''#!/bin/sh
                                                     kubectl version --client
                                                     kubectl set image deployment/technova-api-gateway technova-api-gateway=''' + DOCKER_IMAGE_NAME + '''
