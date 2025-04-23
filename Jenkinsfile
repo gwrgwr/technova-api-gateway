@@ -9,13 +9,13 @@ node(POD_LABEL) {
 
     stage('Build with Kaniko') {
         container('kaniko') {
-            sh """#!/busybox/sh
-                /kaniko/executor \
-                  --context `pwd` \
-                  --dockerfile=Dockerfile \
-                  --destination ${DOCKER_IMAGE_NAME} \
-                  --build-arg GITHUB_TOKEN=${GITHUB_TOKEN}
-            """
+            sh '''#!/busybox/sh
+                            /kaniko/executor \
+                              --context `pwd` \
+                              --dockerfile=./Dockerfile \
+                              --destination ''' + DOCKER_IMAGE_NAME + ''' \
+                              --build-arg GITHUB_TOKEN=$GITHUB_TOKEN
+                        '''
         }
     }
 }
