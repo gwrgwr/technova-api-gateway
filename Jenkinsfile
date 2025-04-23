@@ -18,4 +18,10 @@ node(POD_LABEL) {
                         '''
         }
     }
+
+    stage('Deploy to Kubernetes') {
+            sh '''
+                kubectl apply -f deployment.yml
+            '''
+        }
 }
