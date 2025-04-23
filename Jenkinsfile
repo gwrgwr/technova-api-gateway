@@ -20,11 +20,13 @@ node(POD_LABEL) {
     }
 
     stage('Deploy to Kubernetes') {
-            withKubeConfig([credentialsId: 'kubeconfig']) {
-                sh '''
-                    kubectl set image deployment/technova-api-gateway technova-api-gateway=''' + DOCKER_IMAGE_NAME + '''
-                    kubectl rollout status deployment/technova-api-gateway
-                '''
-            }
+            container('kubectl') {
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                                sh '''
+                                    kubectl set image deployment/technova-api-gateway technova-api-gateway=''' + DOCKER_IMAGE_NAME + '''
+                                    kubectl rollout status deployment/technova-api-gateway
+                                '''
+                            }
+                }
         }
 }
