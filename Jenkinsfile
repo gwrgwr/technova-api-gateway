@@ -23,5 +23,6 @@ node(POD_LABEL) {
             sh '''
                 kubectl apply -f deployment.yml
             '''
+            echo 'Test'
         }
 }
