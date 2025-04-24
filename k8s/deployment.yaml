@@ -25,8 +25,7 @@ spec:
               mountPath: /app/keys/public.pem
               subPath: public.pem
             - name: jwt-private-key-volume
-              mountPath: /app/keys/key.pem
-              subPath: key.pem
+              mountPath: /app/keys
           env:
             - name: MONGODB_URI_API_GATEWAY
               valueFrom:
@@ -65,6 +64,3 @@ spec:
         - name: jwt-private-key-volume
           secret:
             secretName: jwt-private-key
-            items:
-              - key: key.pem
-                path: key.pem
