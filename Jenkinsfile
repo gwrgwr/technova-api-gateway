@@ -1,6 +1,6 @@
 def POD_LABEL = 'kaniko'
     node(POD_LABEL) {
-    def DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:${env.BUILD_ID}'
+    def DOCKER_IMAGE_NAME = "gwrgwr/technova-api-gateway:${env.BUILD_ID}"
 
 
         stage('Checkout') {
