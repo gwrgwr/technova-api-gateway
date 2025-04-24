@@ -49,11 +49,6 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: host
-            - name: RABBITMQ_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-credentials
-                  key: port
       volumes:
         - name: jwt-public-key-volume
           configMap:
