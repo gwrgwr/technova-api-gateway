@@ -8,6 +8,11 @@ def POD_LABEL = 'kaniko'
             echo "Commit completo: ${env.GIT_COMMIT}"
         }
 
+        stage('Debug Env') {
+            sh 'env | sort'
+        }
+
+
         stage('Build with Kaniko') {
             container('kaniko') {
                 sh '''#!/busybox/sh
