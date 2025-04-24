@@ -5,7 +5,6 @@ def POD_LABEL = 'kaniko'
 
         stage('Checkout') {
             checkout scm
-            echo "Commit completo: ${env.GIT_COMMIT}"
         }
 
         stage('Build with Kaniko') {
@@ -15,7 +14,6 @@ def POD_LABEL = 'kaniko'
                                   --context `pwd` \
                                   --dockerfile=./Dockerfile \
                                   --destination ''' + DOCKER_IMAGE_NAME + ''' \
-                                  --build-arg GITHUB_TOKEN=$GITHUB_TOKEN
                             '''
             }
         }
