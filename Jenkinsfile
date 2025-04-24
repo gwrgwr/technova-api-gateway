@@ -1,4 +1,4 @@
-def DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:latest'
+def DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:${env.BUILD_ID}'
 def GITHUB_TOKEN = credentials('github-auth')
 def POD_LABEL = 'kaniko'
     node(POD_LABEL) {
@@ -7,11 +7,6 @@ def POD_LABEL = 'kaniko'
             checkout scm
             echo "Commit completo: ${env.GIT_COMMIT}"
         }
-
-        stage('Debug Env') {
-            sh 'env | sort'
-        }
-
 
         stage('Build with Kaniko') {
             container('kaniko') {
