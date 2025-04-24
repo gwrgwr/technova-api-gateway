@@ -1,13 +1,11 @@
-def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-def timestamp = new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("UTC"))
-def versionTag = "v1-${timestamp}-${shortCommit}"
-def DOCKER_IMAGE_NAME = "gwrgwr/technova-api-gateway:${versionTag}"
+def DOCKER_IMAGE_NAME = 'gwrgwr/technova-api-gateway:${env.GIT_COMMIT}'
 def GITHUB_TOKEN = credentials('github-auth')
 def POD_LABEL = 'kaniko'
     node(POD_LABEL) {
 
         stage('Checkout') {
             checkout scm
+            echo "Commit completo: ${env.GIT_COMMIT}"
         }
 
         stage('Build with Kaniko') {
