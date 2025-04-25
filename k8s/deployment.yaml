@@ -22,10 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: MONGODB_URI_API_GATEWAY
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-api-gateway
-                  key: MONGODB_URI_API_GATEWAY
+              value: "mongodb+srv://murilomassa72:t0SnsRhgENyGcKG9@technova.dvmjo4p.mongodb.net/technova-api-gateway?retryWrites=true&w=majority&appName=Technova"
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
             - name: RABBITMQ_USER
