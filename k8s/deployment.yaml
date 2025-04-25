@@ -20,12 +20,6 @@ spec:
           image: gwrgwr/technova-api-gateway:latest
           ports:
             - containerPort: 8080
-          volumeMounts:
-            - name: jwt-public-key-volume
-              mountPath: /app/keys/public.pem
-              subPath: public.pem
-            - name: jwt-private-key-volume
-              mountPath: /app/keys
           env:
             - name: MONGODB_URI_API_GATEWAY
               valueFrom:
@@ -37,18 +31,25 @@ spec:
             - name: RABBITMQ_USER
               valueFrom:
                   secretKeyRef:
-                    name: rabbitmq-credentials
+                    name: rabbitmq-secret
                     key: username
             - name: RABBITMQ_PASS
               valueFrom:
                       secretKeyRef:
-                        name: rabbitmq-credentials
+                        name: rabbitmq-secret
                         key: password
             - name: RABBITMQ_HOST
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-credentials
+                  name: rabbitmq-secret
                   key: host
+          volumeMounts:
+            - name: jwt-public-key-volume
+              mountPath: /app/keys/public.pem
+              subPath: public.pem
+            - name: jwt-private-key-volume
+              mountPath: /app/keys/key.pem
+              subPath: key.pem
       volumes:
         - name: jwt-public-key-volume
           configMap:
