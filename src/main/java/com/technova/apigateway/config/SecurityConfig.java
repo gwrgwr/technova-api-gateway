@@ -28,20 +28,10 @@ import java.security.interfaces.RSAPublicKey;
 public class SecurityConfig {
 
     @Value("${spring.jwt.keys.secret}")
-    private String privateKeyPath;
+    private RSAPrivateKey privateKey;
 
     @Value("${spring.jwt.keys.public}")
-    private String publicKeyPath;
-
-    @Bean
-    public RSAPrivateKey privateKey() throws Exception {
-        return KeyUtil.readPrivateKey(privateKeyPath.replace("file:", ""));
-    }
-
-    @Bean
-    public RSAPublicKey publicKey() throws Exception {
-        return KeyUtil.readPublicKey(publicKeyPath.replace("file:", ""));
-    }
+    private RSAPublicKey publicKey;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -64,12 +54,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(RSAPublicKey publicKey) {
+    public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
     @Bean
-    public JwtEncoder jwtEncoder(RSAPrivateKey privateKey, RSAPublicKey publicKey) {
+    public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
