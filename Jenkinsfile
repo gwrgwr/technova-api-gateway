@@ -1,20 +1,21 @@
 def GITHUB_TOKEN = credentials('github-auth')
 def POD_LABEL = 'kaniko'
     node(POD_LABEL) {
-    def DOCKER_IMAGE_NAME = "gwrgwr/technova-api-gateway"
+        def DOCKER_IMAGE_NAME = "gwrgwr/technova-api-gateway:${env.BUILD_ID}"
+        def DOCKER_IMAGE_NAME_LATEST = "gwrgwr/technova-api-gateway:latest"
         stage('Checkout') {
             checkout scm
         }
 
         stage('Build with Kaniko') {
             container('kaniko') {
-                sh '''#!/busybox/sh
+               sh '''#!/busybox/sh
                 /kaniko/executor \
-                --context `pwd` \
-                --build-arg GITHUB_TOKEN=$GITHUB_TOKEN \
-                --dockerfile=./Dockerfile \
-                --destination ''' + DOCKER_IMAGE_NAME + env.BUILD_ID + ''' \
-                --destination ''' + DOCKER_IMAGE_NAME '''latest \
+                  --context `pwd` \
+                  --build-arg GITHUB_TOKEN=$GITHUB_TOKEN \
+                  --dockerfile=./Dockerfile \
+                  --destination ''' + DOCKER_IMAGE_NAME + ''' \
+                  --destination ''' + DOCKER_IMAGE_NAME_LATEST + '''\
                 '''
             }
         }
@@ -26,15 +27,15 @@ def POD_LABEL = 'kaniko'
                 stage('Deploy to Kubernetes') {
                     container('kubectl') {
                         withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
-                                    sh '''
+                                    sh """
                                         helm upgrade --install technova-api-gateway ./charts/gateway/ \
                                         --values values.yaml \
                                         --values charts/gateway/values.yaml \
                                         --namespace technova \
-                                        --set gateway.image.tag=''' + env.BUILD_ID + ''' \
+                                        --set gateway.image.tag=${env.BUILD_ID} \
                                         --wait \
                                         --atomic
-                                        '''
+                                        """
                                 }
                         }
                 }
