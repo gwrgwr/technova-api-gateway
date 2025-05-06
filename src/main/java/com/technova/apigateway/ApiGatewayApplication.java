@@ -8,12 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableRabbit
 @SpringBootApplication
 public class ApiGatewayApplication {
-
-        @Value("${spring.jwt.keys.secret}")
-        private static String privateKeyLocation;
     public static void main(String[] args) {
-        System.out.println("Private Key Location: " + privateKeyLocation);
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
-
 }
