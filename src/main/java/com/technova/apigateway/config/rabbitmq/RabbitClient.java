@@ -29,11 +29,10 @@ public class RabbitClient {
 
                 return JsonMapper.getObjectMapper().convertValue(response, resultType);
             } catch (Exception e) {
-                e.printStackTrace();
                 return Result.error(new BaseException("Failed to process response: " + e.getMessage()));
             }
         } catch (Exception e) {
-            throw new RuntimeException("teste");
+            throw new BaseException("");
         }
     }
 

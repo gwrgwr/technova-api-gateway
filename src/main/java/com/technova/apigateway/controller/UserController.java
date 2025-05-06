@@ -51,4 +51,10 @@ public class UserController {
         return ResponseEntity.ok("User details");
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -26,4 +26,8 @@ public class RabbitUserClient {
     public Result<UserResponseDTO> findUserById(String id) {
         return rabbitClient.sendMessageAndReceive(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_FIND_BY_ID_REQUEST_ROUTING_KEY, id, UserResponseDTO.class);
     }
+
+    public void deleteUser(String id) {
+        rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_DELETE_REQUEST_ROUTING_KEY, id);
+    }
 }

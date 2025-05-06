@@ -43,4 +43,8 @@ public class UserService {
         }
         return result;
     }
+
+    public void deleteUser(String id) {
+        rabbitUserClient.deleteUser(id);
+    }
 }
