@@ -16,10 +16,9 @@ public class EmailController {
     @PostMapping("/send/{email}")
     public void sendEmail(@PathVariable String email) {
         this.emailService.sendEmail(email);
-        System.out.println("Email sent to: " + email);
     }
 
-    @GetMapping()
+    @PostMapping("/send/approve")
     public void getApprovedEmail(@RequestBody UserConfirmEmailDTO dto) {
         this.emailService.getApprovedEmail(dto);
     }
