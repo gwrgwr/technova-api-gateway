@@ -1,10 +1,12 @@
 package com.technova.apigateway.controller;
 
+import com.technova.apigateway.domain.user.User;
 import com.technova.apigateway.service.AuthService;
 import com.technova.apigateway.service.UserService;
 import com.technova.user.dto.UserCreateDTO;
 import com.technova.user.dto.UserLoginRequest;
 import com.technova.user.dto.UserResponseDTO;
+import com.technova.user.dto.UserUpdateDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +24,7 @@ public class UserController {
         this.authService = authService;
     }
 
-    @PostMapping("/save")
+    @PostMapping()
     public ResponseEntity<?> save(@RequestBody UserCreateDTO user) {
         userService.sendUserSaveRequest(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -38,22 +40,26 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String id) {
+    @GetMapping()
+    public ResponseEntity<UserResponseDTO> getUserById() {
+        String id = authService.getCurrentUser().getId();
         UserResponseDTO userResponseDTO = userService.sendFindUserByIdRequest(id).getData();
         return ResponseEntity.ok(userResponseDTO);
 
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    @GetMapping
-    public ResponseEntity<?> getUser() {
-        return ResponseEntity.ok("User details");
+    @PutMapping()
+    public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserUpdateDTO user) {
+        User currentUser = authService.getCurrentUser();
+        user.setId(currentUser.getId());
+        return ResponseEntity.ok(this.userService.sendUserUpdateRequest(user).getData());
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
+    @DeleteMapping()
+    public ResponseEntity<?> deleteUser() {
+        String id = authService.getCurrentUser().getId();
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

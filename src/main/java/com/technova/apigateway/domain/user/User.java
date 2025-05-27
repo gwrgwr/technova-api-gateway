@@ -84,4 +84,7 @@ public class User implements UserDetails, CredentialsContainer {
         this.password = userResponseDTO.getPassword();
         this.role = userResponseDTO.getRole();
     }
+
+    public User() {
+    }
 }

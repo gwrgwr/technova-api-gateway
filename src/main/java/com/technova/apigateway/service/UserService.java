@@ -2,8 +2,10 @@ package com.technova.apigateway.service;
 
 import com.technova.Result;
 import com.technova.apigateway.config.rabbitmq.user.RabbitUserClient;
+import com.technova.exceptions.BaseException;
 import com.technova.user.dto.UserCreateDTO;
 import com.technova.user.dto.UserResponseDTO;
+import com.technova.user.dto.UserUpdateDTO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,32 @@ public class UserService {
             throw result.getError();
         }
         return result;
+    }
+
+    public Result<UserResponseDTO> sendUserUpdateRequest(UserUpdateDTO user) {
+
+        Result<UserResponseDTO> result = null;
+
+        if (user.getPassword() != null) {
+            result = rabbitUserClient.sendUserUpdateRequest(UserUpdateDTO.withPassword(user.getId(), bCryptPasswordEncoder.encode(user.getPassword())));
+        }
+        if (user.getEmail() != null) {
+            result = rabbitUserClient.sendUserUpdateRequest(UserUpdateDTO.withEmail(user.getId(), user.getEmail()));
+        }
+        if (user.getAddress() != null) {
+            result = rabbitUserClient.sendUserUpdateRequest(UserUpdateDTO.withAddress(user.getId(), user.getAddress()));
+        }
+        if (user.getPhoneNumber() != null) {
+            result = rabbitUserClient.sendUserUpdateRequest(UserUpdateDTO.withPhoneNumber(user.getId(), user.getPhoneNumber()));
+        }
+
+        if (result != null) {
+            if (result.isHasError()) {
+                throw result.getError();
+            }
+            return result;
+        }
+        return Result.error(new BaseException("User not found"));
     }
 
     public void deleteUser(String id) {

@@ -5,6 +5,7 @@ import com.technova.apigateway.config.rabbitmq.RabbitClient;
 import com.technova.user.constants.RabbitUserConstants;
 import com.technova.user.dto.UserCreateDTO;
 import com.technova.user.dto.UserResponseDTO;
+import com.technova.user.dto.UserUpdateDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,10 @@ public class RabbitUserClient {
 
     public Result<UserResponseDTO> findUserById(String id) {
         return rabbitClient.sendMessageAndReceive(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_FIND_BY_ID_REQUEST_ROUTING_KEY, id, UserResponseDTO.class);
+    }
+
+    public Result<UserResponseDTO> sendUserUpdateRequest(UserUpdateDTO user) {
+        return rabbitClient.sendMessageAndReceive(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_UPDATE_REQUEST_ROUTING_KEY, user, UserResponseDTO.class);
     }
 
     public void deleteUser(String id) {

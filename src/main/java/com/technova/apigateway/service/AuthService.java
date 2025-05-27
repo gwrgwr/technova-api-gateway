@@ -76,12 +76,16 @@ public class AuthService {
 
 //    teste
 
-    public String getCurrentUserId() {
+    public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof User user) {
-            return user.getId();
+        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
+            String role = jwt.getClaimAsString("role");
+            String id = jwt.getClaimAsString("id");
+            User user = new User();
+            user.setId(id);
+            user.setRole(role);
+            return user;
         }
-        // TODO : throw custom exception
         throw new RuntimeException("Usuário não autenticado.");
     }
 }

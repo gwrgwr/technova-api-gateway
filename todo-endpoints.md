@@ -5,3 +5,4 @@
 - [x] GET /users/{id} - Buscar usuário por ID
 - [x] PUT /users/{id} - Atualizar dados do usuário
 - [x] DELETE /users/{id} - Remover usuário
+- [ ] GET /users/products - Buscar produtos comprados do usuário
