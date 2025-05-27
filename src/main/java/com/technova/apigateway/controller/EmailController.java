@@ -13,12 +13,12 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @PostMapping("/send/{email}")
+    @PostMapping("/send/confirm/{email}")
     public void sendEmail(@PathVariable String email) {
         this.emailService.sendEmail(email);
     }
 
-    @PostMapping("/send/approve")
+    @PostMapping("/send/approve/email")
     public void getApprovedEmail(@RequestBody UserConfirmEmailDTO dto) {
         this.emailService.getApprovedEmail(dto);
     }
