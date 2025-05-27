@@ -3,6 +3,7 @@ package com.technova.apigateway.config.rabbitmq.user;
 import com.technova.Result;
 import com.technova.apigateway.config.rabbitmq.RabbitClient;
 import com.technova.user.constants.RabbitUserConstants;
+import com.technova.user.dto.UserConfirmEmailDTO;
 import com.technova.user.dto.UserCreateDTO;
 import com.technova.user.dto.UserResponseDTO;
 import com.technova.user.dto.UserUpdateDTO;
@@ -34,5 +35,9 @@ public class RabbitUserClient {
 
     public void deleteUser(String id) {
         rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_DELETE_REQUEST_ROUTING_KEY, id);
+    }
+
+    public void updateUserApprovalStatus(UserConfirmEmailDTO dto) {
+        rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_CONFIRM_EMAIL_ROUTING_KEY, dto);
     }
 }

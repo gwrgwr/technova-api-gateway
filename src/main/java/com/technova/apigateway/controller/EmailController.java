@@ -17,4 +17,9 @@ public class EmailController {
         this.emailService.sendEmail(email);
         System.out.println("Email sent to: " + email);
     }
+
+    @GetMapping("{email}")
+    public void getApprovedEmail(@RequestBody Boolean isApproved, @PathVariable String email) {
+        this.emailService.getApprovedEmail(isApproved, email);
+    }
 }
