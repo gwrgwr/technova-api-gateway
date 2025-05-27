@@ -1,6 +1,7 @@
 package com.technova.apigateway.controller;
 
 import com.technova.apigateway.service.EmailService;
+import com.technova.user.dto.UserConfirmEmailDTO;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +19,8 @@ public class EmailController {
         System.out.println("Email sent to: " + email);
     }
 
-    @GetMapping("{email}")
-    public void getApprovedEmail(@RequestBody Boolean isApproved, @PathVariable String email) {
-        this.emailService.getApprovedEmail(isApproved, email);
+    @GetMapping()
+    public void getApprovedEmail(@RequestBody UserConfirmEmailDTO dto) {
+        this.emailService.getApprovedEmail(dto);
     }
 }

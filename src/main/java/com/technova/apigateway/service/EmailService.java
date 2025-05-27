@@ -19,7 +19,7 @@ public class EmailService {
         rabbitEmailClient.sendConfirmRegistrationEmail(email);
     }
 
-    public void getApprovedEmail(Boolean isApproved, String email) {
-        this.rabbitUserClient.updateUserApprovalStatus(new UserConfirmEmailDTO(isApproved, email));
+    public void getApprovedEmail(UserConfirmEmailDTO dto) {
+        this.rabbitUserClient.updateUserApprovalStatus(dto);
     }
 }
