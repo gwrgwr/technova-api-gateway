@@ -3,6 +3,7 @@ package com.technova.apigateway.service;
 import com.technova.apigateway.config.rabbitmq.email.RabbitEmailClient;
 import com.technova.apigateway.config.rabbitmq.user.RabbitUserClient;
 import com.technova.user.dto.UserConfirmEmailDTO;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,4 +23,9 @@ public class EmailService {
     public void getApprovedEmail(UserConfirmEmailDTO dto) {
         this.rabbitUserClient.updateUserApprovalStatus(dto);
     }
+
+//    @RabbitListener(queues = "email-code")
+//    public void receiveEmailCode(String email) {
+//        // DO something
+//    }
 }
