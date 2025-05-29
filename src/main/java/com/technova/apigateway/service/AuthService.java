@@ -5,14 +5,15 @@ import com.technova.apigateway.domain.user.User;
 import com.technova.apigateway.domain.vendor.VendorAuth;
 import com.technova.user.dto.UserLoginRequest;
 import com.technova.user.dto.UserResponseDTO;
+import com.technova.user.enums.UserStatus;
+import com.technova.user.exceptions.UserDeactivateException;
+import com.technova.user.exceptions.UserDeletedException;
 import com.technova.user.exceptions.UserNotFoundException;
 import com.technova.vendor.dto.VendorLoginRequest;
 import com.technova.vendor.dto.VendorResponseDTO;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,9 +32,15 @@ public class AuthService {
     }
 
     public String login (UserLoginRequest userLoginRequest) {
-        Result<UserResponseDTO> userResponseDTO = userService.sendUserLoginRequest(userLoginRequest.getUsername());
+        Result<UserResponseDTO> userResponseDTO = userService.sendUserLoginRequest(userLoginRequest.getCredential());
         if (userResponseDTO.isHasError()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException();
+        }
+        if (userResponseDTO.getData().getStatus() == UserStatus.INACTIVE ) {
+            throw new UserDeactivateException();
+        }
+        if (userResponseDTO.getData().getStatus() == UserStatus.SUSPENDED) {
+            throw new UserDeletedException();
         }
         User user = new User(userResponseDTO.getData());
         if (bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), userResponseDTO.getData().getPassword())) {
@@ -56,36 +63,5 @@ public class AuthService {
             return tokenService.generateToken(vendorResponseDTO.getData().getId(), vendorAuth.getCredentials(), vendorAuth.getRole());
         }
         return null;
-    }
-
-    // TODO: ajeitar isso daqui
-    public VendorAuth getCurrentVendor() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
-            String role = jwt.getClaimAsString("role");
-            String id = jwt.getClaimAsString("id");
-            String email = jwt.getSubject();
-            VendorAuth vendorAuth = new VendorAuth();
-            vendorAuth.setId(id);
-            vendorAuth.setCredentials(email);
-            vendorAuth.setRole(role);
-            return vendorAuth;
-        }
-        throw new RuntimeException("Usuário não autenticado.");
-    }
-
-//    teste
-
-    public User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
-            String role = jwt.getClaimAsString("role");
-            String id = jwt.getClaimAsString("id");
-            User user = new User();
-            user.setId(id);
-            user.setRole(role);
-            return user;
-        }
-        throw new RuntimeException("Usuário não autenticado.");
     }
 }

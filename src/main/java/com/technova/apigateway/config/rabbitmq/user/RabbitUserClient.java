@@ -37,6 +37,10 @@ public class RabbitUserClient {
         rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_DELETE_REQUEST_ROUTING_KEY, id);
     }
 
+    public void softDeleteUser(String id) {
+        rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_SOFT_DELETE_REQUEST_ROUTING_KEY, id);
+    }
+
     public void updateUserApprovalStatus(UserConfirmEmailDTO dto) {
         rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_CONFIRM_EMAIL_ROUTING_KEY, dto);
     }

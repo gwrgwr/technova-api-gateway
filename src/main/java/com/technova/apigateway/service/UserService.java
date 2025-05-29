@@ -21,13 +21,12 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Result<?> sendUserSaveRequest(UserCreateDTO user) {
+    public void sendUserSaveRequest(UserCreateDTO user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Result<?> result = rabbitUserClient.sendCreateUser(user);
         if (result.isHasError()) {
             throw result.getError();
         }
-        return result;
     }
 
     public Result<UserResponseDTO> sendUserLoginRequest(String email) {
@@ -74,5 +73,9 @@ public class UserService {
 
     public void deleteUser(String id) {
         rabbitUserClient.deleteUser(id);
+    }
+
+    public void softDeleteUser(String id) {
+        rabbitUserClient.softDeleteUser(id);
     }
 }

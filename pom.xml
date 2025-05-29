@@ -40,22 +40,7 @@
             <url>https://maven.pkg.github.com/muriloramos-dev/technova-common</url>
         </repository>
     </repositories>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.awspring.cloud</groupId>
-                <artifactId>spring-cloud-aws-dependencies</artifactId>
-                <version>3.1.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>io.awspring.cloud</groupId>
-            <artifactId>spring-cloud-aws-starter-dynamodb</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
@@ -80,10 +65,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

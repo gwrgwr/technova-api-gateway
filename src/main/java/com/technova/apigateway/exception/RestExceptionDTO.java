@@ -1,4 +1,4 @@
 package com.technova.apigateway.exception;
 
-public record RestExceptionDTO(String path, String message, Integer statusCode, String error) {
+public record RestExceptionDTO(String path, Integer statusCode, String error) {
 }
