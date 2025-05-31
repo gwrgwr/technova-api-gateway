@@ -78,4 +78,12 @@ public class UserService {
     public void softDeleteUser(String id) {
         rabbitUserClient.softDeleteUser(id);
     }
+
+    public Result<UserResponseDTO> activeUser(String id) {
+        Result<UserResponseDTO> result = rabbitUserClient.activeUser(id);
+        if (result.isHasError()) {
+            throw result.getError();
+        }
+        return result;
+    }
 }

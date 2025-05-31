@@ -44,4 +44,8 @@ public class RabbitUserClient {
     public void updateUserApprovalStatus(UserConfirmEmailDTO dto) {
         rabbitClient.sendMessage(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_CONFIRM_EMAIL_ROUTING_KEY, dto);
     }
+
+    public Result<UserResponseDTO> activeUser(String id) {
+        return rabbitClient.sendMessageAndReceive(RabbitUserConstants.USER_EXCHANGE, RabbitUserConstants.USER_ACTIVE_REQUEST_ROUTING_KEY, id, UserResponseDTO.class);
+    }
 }

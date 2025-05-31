@@ -68,5 +68,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @PutMapping("/activate")
+    public ResponseEntity<UserResponseDTO> activateUser(@Parameter(hidden = true) @CurrentUserId String id) {
+        UserResponseDTO userResponseDTO = userService.activeUser(id).getData();
+        return ResponseEntity.ok(userResponseDTO);
+    }
 }
