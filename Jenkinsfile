@@ -26,7 +26,7 @@ def POD_LABEL = 'kaniko'
 
                 stage('Deploy to Kubernetes') {
                     container('kubectl') {
-                        withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
+                        withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'http://137.184.207.136']) {
                                     sh """
                                         helm upgrade --install technova-api-gateway ./charts/gateway/ \
                                         --values values.yaml \
