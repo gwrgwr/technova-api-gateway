@@ -46,7 +46,7 @@ public class AuthService {
         if (bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), userResponseDTO.getData().getPassword())) {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
-            return tokenService.generateToken(userResponseDTO.getData().getId(), user.getEmail(), user.getRole());
+            return tokenService.generateToken(userResponseDTO.getData().getId(), user.getCredential(), user.getRole());
         }
         return null;
     }

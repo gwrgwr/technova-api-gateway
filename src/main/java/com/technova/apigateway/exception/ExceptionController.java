@@ -1,6 +1,7 @@
 package com.technova.apigateway.exception;
 
 import com.technova.exceptions.BaseException;
+import com.technova.exceptions.TokenExpiredException;
 import com.technova.user.exceptions.*;
 import com.technova.vendor.exceptions.VendorAlreadyExistsException;
 import com.technova.vendor.exceptions.VendorNotFoundException;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionController {
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<?> handleTokenExpiredException(HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new RestExceptionDTO(request.getRequestURI(),401, "Token Expired"));
+    }
 
     @ExceptionHandler(UserCPFAlreadyExistsException.class)
     public ResponseEntity<?> handleUserCPFAlreadyExistsException(HttpServletRequest request) {

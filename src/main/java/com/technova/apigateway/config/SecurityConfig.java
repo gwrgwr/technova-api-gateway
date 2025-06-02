@@ -4,6 +4,9 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.technova.apigateway.middleware.ValidateToken;
+import com.technova.apigateway.service.CustomUserDetailsService;
+import com.technova.apigateway.service.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +16,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -27,11 +32,20 @@ import java.security.interfaces.RSAPublicKey;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${spring.jwt.keys.secret}")
-    private RSAPrivateKey privateKey;
+    private final TokenService tokenService;
+    private final UserDetailsService userDetailsService;
+    private final JwtDecoder jwtDecoder;
 
-    @Value("${spring.jwt.keys.public}")
-    private RSAPublicKey publicKey;
+    public SecurityConfig(TokenService tokenService, UserDetailsService userDetailsService, JwtDecoder jwtDecoder) {
+        this.tokenService = tokenService;
+        this.userDetailsService = userDetailsService;
+        this.jwtDecoder = jwtDecoder;
+    }
+
+    @Bean
+    public ValidateToken validateToken() {
+        return new ValidateToken(tokenService, userDetailsService, jwtDecoder);
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,24 +58,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
+                .addFilterBefore(validateToken(), UsernamePasswordAuthenticationFilter.class)
                 .oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()))
                 .build();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(publicKey).build();
-    }
-
-    @Bean
-    public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
-        var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
     }
 }

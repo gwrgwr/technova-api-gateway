@@ -12,7 +12,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     private String id;
 
-    private String email;
+    private String credential;
 
     private String password;
 
@@ -26,12 +26,12 @@ public class User implements UserDetails, CredentialsContainer {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCredential() {
+        return credential;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCredential(String credential) {
+        this.credential = credential;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return getCredential();
     }
 
     @Override
@@ -72,15 +72,15 @@ public class User implements UserDetails, CredentialsContainer {
         this.password = null;
     }
 
-    public User(String email, String password, String role) {
-        this.email = email;
+    public User(String credential, String password, String role) {
+        this.credential = credential;
         this.password = password;
         this.role = role;
     }
 
     public User(UserResponseDTO userResponseDTO) {
         this.id = userResponseDTO.getId();
-        this.email = userResponseDTO.getEmail();
+        this.credential = userResponseDTO.getEmail();
         this.password = userResponseDTO.getPassword();
         this.role = userResponseDTO.getRole();
     }
