@@ -28,4 +28,6 @@ public class RabbitVendorClient {
     public Result<VendorFindDTO> findVendorById(String id) {
         return rabbitClient.sendMessageAndReceive(RabbitVendorConstants.VENDOR_EXCHANGE, RabbitVendorConstants.VENDOR_FIND_BY_ID_REQUEST_ROUTING_KEY, id, VendorFindDTO.class);
     }
+
+    
 }

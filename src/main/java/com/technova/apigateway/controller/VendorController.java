@@ -18,14 +18,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/vendor")
 public class VendorController {
 
-    @Autowired
-    private VendorService vendorService;
 
-    @Autowired
-    private AuthService authService;
+    private final VendorService vendorService;
+
+
+    private final AuthService authService;
+
+    public VendorController(VendorService vendorService, AuthService authService) {
+        this.vendorService = vendorService;
+        this.authService = authService;
+    }
 
     @PostMapping("/save")
-    public ResponseEntity<VendorResponseDTO> createVendor(@RequestBody VendorCreateDTO vendor) {
+    public ResponseEntity<VendorResponseDTO> saveVendor(@RequestBody VendorCreateDTO vendor) {
         Result<VendorResponseDTO> result = vendorService.sendVendorSaveRequest(vendor);
         if (result.isHasError()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

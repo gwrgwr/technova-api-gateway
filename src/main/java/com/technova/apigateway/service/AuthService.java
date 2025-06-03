@@ -2,7 +2,7 @@ package com.technova.apigateway.service;
 
 import com.technova.Result;
 import com.technova.apigateway.domain.user.User;
-import com.technova.apigateway.domain.vendor.VendorAuth;
+import com.technova.apigateway.domain.vendor.Vendor;
 import com.technova.user.dto.UserLoginRequest;
 import com.technova.user.dto.UserResponseDTO;
 import com.technova.user.enums.UserStatus;
@@ -56,11 +56,11 @@ public class AuthService {
         if (vendorResponseDTO.isHasError()) {
             throw new UserNotFoundException("User not found");
         }
-        VendorAuth vendorAuth = new VendorAuth(vendorResponseDTO.getData());
+        Vendor vendor = new Vendor(vendorResponseDTO.getData());
         if (bCryptPasswordEncoder.matches(vendorLoginRequest.getPassword(), vendorResponseDTO.getData().getPassword())) {
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(vendorAuth, vendorAuth.getPassword(), vendorAuth.getAuthorities());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(vendor, vendor.getPassword(), vendor.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
-            return tokenService.generateToken(vendorResponseDTO.getData().getId(), vendorAuth.getCredentials(), vendorAuth.getRole());
+            return tokenService.generateToken(vendorResponseDTO.getData().getId(), vendor.getCredentials(), vendor.getRole());
         }
         return null;
     }

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class VendorAuth implements UserDetails, CredentialsContainer {
+public class Vendor implements UserDetails, CredentialsContainer {
 
     private String id;
 
@@ -58,16 +58,16 @@ public class VendorAuth implements UserDetails, CredentialsContainer {
         this.role = role;
     }
 
-    public VendorAuth(String credentials, String password, String role) {
+    public Vendor(String credentials, String password, String role) {
         this.credentials = credentials;
         this.password = password;
         this.role = role;
     }
 
-    public VendorAuth() {
+    public Vendor() {
     }
 
-    public VendorAuth(VendorResponseDTO vendorResponseDTO) {
+    public Vendor(VendorResponseDTO vendorResponseDTO) {
         this.id = vendorResponseDTO.getId();
         this.companyName = vendorResponseDTO.getCompanyName();
         this.credentials = vendorResponseDTO.getEmail();

@@ -1,6 +1,6 @@
 package com.technova.apigateway.controller;
 
-import com.technova.apigateway.domain.vendor.VendorAuth;
+import com.technova.apigateway.domain.vendor.Vendor;
 import com.technova.apigateway.service.ProductService;
 import com.technova.apigateway.utils.JwtUtils;
 import com.technova.product.dto.ProductDTO;
@@ -26,9 +26,9 @@ public class ProductController {
     @PreAuthorize("hasAuthority('SCOPE_VENDOR')")
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product) {
-        VendorAuth vendorAuth = jwtUtils.getCurrentVendor();
-        product.setVendorId(vendorAuth.getId());
-        product.setCompanyName(vendorAuth.getCompanyName());
+        Vendor vendor = jwtUtils.getCurrentVendor();
+        product.setVendorId(vendor.getId());
+        product.setCompanyName(vendor.getCompanyName());
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product).getData());
     }
 }
