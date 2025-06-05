@@ -1,12 +1,12 @@
 package com.technova.apigateway.controller;
 
 import com.technova.Result;
+import com.technova.apigateway.domain.vendor.Vendor;
+import com.technova.apigateway.middleware.annotation.CurrentVendor;
 import com.technova.apigateway.service.AuthService;
 import com.technova.apigateway.service.VendorService;
-import com.technova.vendor.dto.VendorCreateDTO;
-import com.technova.vendor.dto.VendorFindDTO;
-import com.technova.vendor.dto.VendorLoginRequest;
-import com.technova.vendor.dto.VendorResponseDTO;
+import com.technova.vendor.dto.*;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +48,44 @@ public class VendorController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_VENDOR')")
-    @GetMapping("/{id}")
-    public ResponseEntity<VendorFindDTO> getVendorById(@PathVariable String id) {
-        Result<VendorFindDTO> result = vendorService.sendFindVendorByIdRequest(id);
+    @GetMapping()
+    public ResponseEntity<VendorFindDTO> getVendorById(@CurrentVendor @Parameter(hidden = true) Vendor vendor) {
+        Result<VendorFindDTO> result = vendorService.sendFindVendorByIdRequest(vendor.getId());
+        return ResponseEntity.ok(result.getData());
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_VENDOR')")
+    @PutMapping("/update")
+    public ResponseEntity<VendorResponseDTO> updateVendor(@RequestBody VendorUpdateDTO vendorUpdate, @CurrentVendor @Parameter(hidden = true) Vendor vendor) {
+        vendorUpdate.setId(vendor.getId());
+        Result<VendorResponseDTO> result = vendorService.sendVendorUpdateRequest(vendorUpdate);
+        if (result.isHasError()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.ok(result.getData());
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_VENDOR')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteVendor(@CurrentVendor @Parameter(hidden = true) Vendor vendor) {
+        vendorService.deleteVendor(vendor.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_VENDOR')")
+    @DeleteMapping("/soft-delete")
+    public ResponseEntity<Void> softDeleteVendor(@CurrentVendor @Parameter(hidden = true) Vendor vendor) {
+        vendorService.softDeleteVendor(vendor.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_VENDOR')")
+    @PutMapping("/activate")
+    public ResponseEntity<VendorResponseDTO> activateVendor(@CurrentVendor @Parameter(hidden = true) Vendor vendor) {
+        Result<VendorResponseDTO> result = vendorService.activateVendor(vendor.getId());
+        if (result.isHasError()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         return ResponseEntity.ok(result.getData());
     }
 }

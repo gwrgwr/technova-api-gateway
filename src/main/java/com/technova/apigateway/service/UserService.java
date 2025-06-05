@@ -6,6 +6,7 @@ import com.technova.exceptions.BaseException;
 import com.technova.user.dto.UserCreateDTO;
 import com.technova.user.dto.UserResponseDTO;
 import com.technova.user.dto.UserUpdateDTO;
+import com.technova.user.exceptions.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class UserService {
             }
             return result;
         }
-        return Result.error(new BaseException("User not found"));
+        return Result.error(new UserNotFoundException());
     }
 
     public void deleteUser(String id) {

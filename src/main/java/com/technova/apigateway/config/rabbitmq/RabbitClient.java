@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.technova.Result;
 import com.technova.apigateway.mapper.JsonMapper;
 import com.technova.exceptions.BaseException;
+import com.technova.messaging.RabbitClassConverter;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,13 +22,8 @@ public class RabbitClient {
                 // TODO: add custom exception
                 return Result.error(new BaseException("Serviço offline ou sem resposta do consumidor via RabbitMQ"));
             }
-
             try {
-                JavaType resultType = JsonMapper.getObjectMapper()
-                        .getTypeFactory()
-                        .constructParametricType(Result.class, responseObject);
-
-                return JsonMapper.getObjectMapper().convertValue(response, resultType);
+                return RabbitClassConverter.convert(response, responseObject);
             } catch (Exception e) {
                 return Result.error(new BaseException("Failed to process response: " + e.getMessage()));
             }
